@@ -48,7 +48,7 @@ Then wrap the relevant content:
 
 ```html
 <div class="docs">
-  <!-- docs content -->
+  <!-- shortcodes content -->
 </div>
 ```
 
