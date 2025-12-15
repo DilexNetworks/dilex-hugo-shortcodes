@@ -1,0 +1,12 @@
+/* Dilex Hugo Shortcodes – main stylesheet */
+
+/* Core tokens / shared helpers (if any) */
+/* @import "./dx-core.css"; */
+
+/* Components */
+@import "./swatches.css";
+@import "./dx-photo.css";
+@import "./dx-code.css";
+@import "./dx-bgbox.css";
+@import "./dx-tokens.css";
+/*@import "./dx-pullquote.css";*/

@@ -27,6 +27,13 @@
           <p class="dx-sub">{{ $blurb | replaceRE "\\s+" " " | truncate 120 }}</p>
       </a>
       {{ end }}
+
+      {{ with site.GetPage "guides/theme-overrides" }}
+      <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
+          <div class="dx-card__title">{{ .Title }}</div>
+          <p class="dx-sub">{{ .Summary | plainify }}</p>
+      </a>
+      {{ end }}
   </div>
 
   <h2>Shortcodes</h2>

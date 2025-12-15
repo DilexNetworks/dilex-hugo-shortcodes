@@ -1,0 +1,41 @@
+:root{
+    /* Shared */
+    --dx-radius: .75rem;
+    --dx-fg: var(--fg, #1f2328);
+
+    /* bgbox tones */
+    --dx-bgbox-bg-neutral: #f6f7f8;
+    --dx-bgbox-border-neutral: #d0d7de;
+
+    --dx-bgbox-bg-info: #eef5ff;
+    --dx-bgbox-border-info: #b6d4fe;
+
+    --dx-bgbox-bg-warn: #fff6e5;
+    --dx-bgbox-border-warn: #f1c232;
+
+    --dx-bgbox-bg-danger: #fdecea;
+    --dx-bgbox-border-danger: #f5a5a5;
+
+    --dx-bgbox-bg-success: #edf7ed;
+    --dx-bgbox-border-success: #a6d8a8;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    /* bgbox tones (dark) */
+    --dx-bgbox-bg-neutral: #1e232b;
+    --dx-bgbox-border-neutral: #3a4452;
+
+    --dx-bgbox-bg-info: #102a43;
+    --dx-bgbox-border-info: #2b6cb0;
+
+    --dx-bgbox-bg-warn: #2a2113;
+    --dx-bgbox-border-warn: #b7791f;
+
+    --dx-bgbox-bg-danger: #2b171a;
+    --dx-bgbox-border-danger: #c05660;
+
+    --dx-bgbox-bg-success: #15251b;
+    --dx-bgbox-border-success: #2f855a;
+  }
+}

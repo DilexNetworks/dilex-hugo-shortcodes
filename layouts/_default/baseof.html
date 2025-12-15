@@ -1,35 +1,17 @@
-{{ define "main" }}
-  {{ .Content }}
-
-  <h2>Docs</h2>
-  {{- $shortcodePages := where .Site.RegularPages "Section" "shortcodes" -}}
-  {{- $pages := $shortcodePages -}}
-  {{- $showSection := false -}}
-  {{- if not (gt (len $shortcodePages) 0) -}}
-    {{- $pages = .Site.RegularPages -}}
-    {{- $showSection = true -}}
-  {{- end -}}
-
-  <div class="dx-grid">
-    {{- range $pages -}}
-      <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
-        <div class="dx-card__title">{{ .Title }}</div>
-        {{- if $showSection -}}
-          <div class="dx-pill">{{ .Section }}</div>
-        {{- end -}}
-      </a>
-    {{- end -}}
-  </div>
-{{ end }}
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ if .Title }}{{ .Title }} | {{ end }}{{ .Site.Title }}</title>
-    {{ with resources.Get "css/dx-photo.css" }}<link rel="stylesheet" href="{{ .RelPermalink }}">{{ end }}
-    {{ with resources.Get "css/dx-code.css" }}<link rel="stylesheet" href="{{ .RelPermalink }}">{{ end }}
+    {{- $dx := slice
+      (resources.Get "css/dx-tokens.css")
+      (resources.Get "css/dx-photo.css")
+      (resources.Get "css/dx-code.css")
+      (resources.Get "css/dx-bgbox.css")
+      -}}
+    {{- $dxcss := $dx | resources.Concat "css/dx.css" | minify | fingerprint -}}
+    <link rel="stylesheet" href="{{ $dxcss.RelPermalink }}">
     <style>
       :root{
         --bg:#ffffff; --fg:#0f172a; --muted:#475569; --border:#e2e8f0;

@@ -1,0 +1,24 @@
+{{/* dx/bgbox - simple background box wrapper */}}
+
+{{- $tone := .Get "tone" | default "neutral" -}}
+{{- $title := .Get "title" -}}
+{{- $class := .Get "class" | default "" -}}
+
+{{- $inner := .InnerDeindent -}}
+{{- /* Strip exactly one leading newline (common with multiline shortcode bodies) */ -}}
+{{- $inner = $inner | replaceRE "^\\r?\\n" "" -}}
+
+<div class="dx-bgbox dx-bgbox--{{ $tone }}{{ if $class }} {{ $class }}{{ end }}">
+    {{- if $title -}}
+        <div class="dx-bgbox__title">{{ $title }}</div>
+    {{- end -}}
+    <div class="dx-bgbox__body">
+        {{- /* If inner content already contains rendered HTML (common when nesting shortcodes),
+              don't run it back through Goldmark (which may strip raw HTML unless unsafe=true). */ -}}
+        {{- if (findRE "<[a-zA-Z][^>]*>" .Inner) -}}
+            {{- .Inner | safeHTML -}}
+        {{- else -}}
+            {{- $inner | markdownify -}}
+        {{- end -}}
+    </div>
+</div>
