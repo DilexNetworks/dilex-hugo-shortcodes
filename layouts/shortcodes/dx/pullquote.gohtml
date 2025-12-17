@@ -1,0 +1,47 @@
+{{/*---
+description: "A pullquote with a quotation mark and a citation."
+usage: |
+    {{< pullquote author="John Berger" align="left" variant="ink" width="30ch" >}}
+    To understand a thing is to be liberated from it.
+    {{< /pullquote >}}
+params:
+    author:
+        type: string
+        required: false
+        default: none
+        doc: "The author of the quote"
+    align:
+        type: string
+        required: false
+        default: center
+        doc: "The alignment of the quote"
+    variant:
+        type: string
+        required: false
+        default: ink (sun, ink, sky, mint, rose)
+        doc: "The color variant of the quote"
+    width:
+        type: string
+        required: false
+        default: none
+        doc: "The maximum width of the quote"
+---*/}}
+
+{{ $author  := .Get "author" }}
+{{ $align   := default "center" (.Get "align") }}
+{{ $variant := default "ink" (.Get "variant") }}
+{{ $width   := .Get "width" }}
+
+<figure class="pullquote pullquote--{{ $align }} pullquote--{{ $variant }}" {{ with $width }}style="max-width:{{ . }};"{{ end }}>
+    <svg class="pullquote__mark" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M18 10c-4 0-8 3-8 8 0 3 2 6 4 7-2 3-6 7-10 8 4 1 9 1 12-2 4-4 6-8 6-13 0-5-2-8-4-8zm24 0c-4 0-8 3-8 8 0 3 2 6 4 7-2 3-6 7-10 8 4 1 9 1 12-2 4-4 6-8 6-13 0-5-2-8-4-8z"/>
+    </svg>
+
+    <blockquote class="pullquote__text">
+        {{ .Inner | markdownify }}
+    </blockquote>
+
+    {{ with $author }}
+    <figcaption class="pullquote__author">— {{ . }}</figcaption>
+    {{ end }}
+</figure>

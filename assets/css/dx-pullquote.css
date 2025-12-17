@@ -68,6 +68,13 @@
   --pq-quote: rgba(14, 165, 233, 0.18);
 }
 
+.pullquote--mint {
+  --pq-bg: #ecfdf5;
+  --pq-fg: #064e3b;
+  --pq-accent: #10b981;
+  --pq-quote: rgba(16, 185, 129, 0.18);
+}
+
 .pullquote--rose {
   --pq-bg: #fff0f3;
   --pq-fg: #5a1020;
@@ -103,6 +110,12 @@
   --pq-fg: #bae6fd;
   --pq-accent: #0ea5e9;
   --pq-quote: rgba(14, 165, 233, 0.25);
+}
+:is(.dark, [data-theme="dark"]) .pullquote--mint {
+  --pq-bg: #022c22;
+  --pq-fg: #a7f3d0;
+  --pq-accent: #10b981;
+  --pq-quote: rgba(16, 185, 129, 0.25);
 }
 :is(.dark, [data-theme="dark"]) .pullquote--rose {
   --pq-bg: #3a0e1a;
