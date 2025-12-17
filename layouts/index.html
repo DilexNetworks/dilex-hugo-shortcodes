@@ -4,7 +4,7 @@
   <h2>Getting started</h2>
   <div class="dx-grid dx-grid--wide">
 
-    {{ with site.GetPage "fragments/install" }}
+    {{ with site.GetPage "getting-started/install" }}
       <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
         <div class="dx-card__title">{{ .Title }}</div>
         {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
@@ -12,7 +12,7 @@
       </a>
     {{ end }}
 
-    {{ with site.GetPage "fragments/design-notes" }}
+    {{ with site.GetPage "getting-started/design-notes" }}
       <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
         <div class="dx-card__title">{{ .Title }}</div>
         {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
@@ -20,7 +20,7 @@
       </a>
     {{ end }}
 
-      {{ with site.GetPage "fragments/why-namespaced" }}
+      {{ with site.GetPage "getting-started/why-namespaced" }}
       <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
           <div class="dx-card__title">{{ .Title }}</div>
           {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
@@ -28,30 +28,27 @@
       </a>
       {{ end }}
 
-      {{ with site.GetPage "guides/theme-overrides" }}
+  </div>
+
+  <h2>Guides</h2>
+  {{- $guidePages := where .Site.RegularPages "Section" "guides" -}}
+  <div class="dx-grid dx-grid--wide">
+    {{- range $guidePages -}}
       <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
-          <div class="dx-card__title">{{ .Title }}</div>
-          <p class="dx-sub">{{ .Summary | plainify }}</p>
+        <div class="dx-card__title">{{ .Title }}</div>
+        {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
+        <p class="dx-sub">{{ $blurb | replaceRE "\\s+" " " | truncate 120 }}</p>
       </a>
-      {{ end }}
+    {{- end -}}
   </div>
 
   <h2>Shortcodes</h2>
-  {{- $shortcodePages := where .Site.RegularPages "Section" "shortcodes" -}}
-  {{- $pages := $shortcodePages -}}
-  {{- $showSection := false -}}
-  {{- if not (gt (len $shortcodePages) 0) -}}
-    {{- $pages = .Site.RegularPages -}}
-    {{- $showSection = true -}}
-  {{- end -}}
+  {{- $pages := where .Site.RegularPages "Section" "shortcodes" -}}
 
   <div class="dx-grid">
     {{- range $pages -}}
       <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
         <div class="dx-card__title">{{ .Title }}</div>
-        {{- if $showSection -}}
-          <div class="dx-pill">{{ .Section }}</div>
-        {{- end -}}
       </a>
     {{- end -}}
   </div>

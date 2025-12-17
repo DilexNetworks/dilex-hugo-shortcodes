@@ -1,8 +1,6 @@
 ---
 title: "Why namespaced shortcodes?"
 summary: the 'dx' namespace
-build:
-  list: never
 ---
 
 ## Why namespaced shortcodes?

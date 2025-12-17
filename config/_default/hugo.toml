@@ -9,3 +9,20 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT"]
     lineNos = true
     noClasses = true
     style = "github-dark"
+
+
+[menus]
+  [[menus.main]]
+    name = "Getting Started"
+    pageRef = "/getting-started"
+    weight = 10
+
+  [[menus.main]]
+    name = "Shortcodes"
+    pageRef = "/shortcodes"
+    weight = 20
+
+  [[menus.main]]
+    name = "Guides"
+    pageRef = "/guides"
+    weight = 30

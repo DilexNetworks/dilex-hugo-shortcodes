@@ -1,0 +1,239 @@
+{{/*---
+description: |
+    Compare two images side-by-side or
+    with the two images on top of each other
+    exposed with a slider
+usage:
+    - |
+        '{{< compare
+            left_src="..."
+            left_alt="..."
+            left_credit="..."
+            left_credit_align="..."
+            left_credit_bg="..."
+            left_credit_color="..."
+            left_caption="..."
+            right_src="..."
+            right_alt="..."
+            right_credit="..."
+            right_credit_align="..."
+            right_credit_bg="..."
+            right_credit_color="..."
+            right_caption="..."
+            >}}'
+    - |
+        '{{< compare
+            left_src="..."
+            left_alt="..."
+            left_credit="..."
+            left_credit_align="..."
+            left_credit_bg="..."
+            left_credit_color="..."
+            left_caption="..."
+            right_src="..."
+            right_alt="..."
+            right_credit="..."
+            right_credit_align="..."
+            right_credit_bg="..."
+            right_credit_color="..."
+            right_caption="..."
+            mode="slider"
+            slider_pos="50"
+            slider_label_left="..."
+            slider_label_right="..."
+            slider_height="..."
+            slider_aspect="..." >}}'
+params:
+    left_src:
+      type: string
+      required: true
+      doc: "Left image source"
+    left_alt:
+      type: string
+      required: false
+      doc: "Left image source ALT text"
+    left_credit:
+      type: string
+      required: false
+      doc: "Left image credit text"
+    left_credit_align:
+      type: string
+      required: false
+      default: left
+      doc: "left | center | right"
+    left_credit_bg:
+      type: string
+      required: false
+      default: rgba(0,0,0,0.55)
+      doc: "CSS color value"
+    left_credit_color:
+      type: string
+      required: false
+      default: #fff
+      doc: "CSS color value"
+    left_caption:
+      type: string
+      required: false
+      doc: "Left image caption text"
+    right_src:
+      type: string
+      required: true
+      doc: "Right image source"
+    right_alt:
+      type: string
+      required: false
+      doc: "Right image source ALT text"
+    right_credit:
+      type: string
+      required: false
+      doc: "Right image credit text"
+    right_credit_align:
+      type: string
+      required: false
+      default: right
+      doc: "left | center | right"
+    right_credit_bg:
+      type: string
+      required: false
+      default: rgba(0,0,0,0.55)
+      doc: "CSS color value"
+    right_credit_color:
+      type: string
+      required: false
+      default: #fff
+      doc: "CSS color value"
+    right_caption:
+      type: string
+      required: false
+      doc: "Right image caption text"
+    mode:
+      type: string
+      required: false
+      default: side
+      doc: "side | slider"
+    slider_pos:
+      type: string
+      required: false
+      default: 50
+      doc: "Position of the slider handle (%)"
+    slider_label_left:
+      type: string
+      required: false
+      default: ""
+      doc: "Label for the left image"
+    slider_label_right:
+      type: string
+      required: false
+      default: ""
+      doc: "Label for the right image"
+    slider_height:
+      type: string
+      required: false
+      doc: "Height of the slider (px)"
+    slider_aspect:
+      type: string
+      required: false
+      doc: "Aspect ratio of the slider (width/height)"
+---*/}}
+
+{{ $mode := .Get "mode" | default "side" }}
+
+{{/* Common params */}}
+{{ $split := .Get "width" | default "50:50" }}
+{{ $parts := split $split ":" }}
+{{ $leftW  := index $parts 0 | default "50" }}
+{{ $rightW := index $parts 1 | default "50" }}
+{{ $gap    := .Get "gap" | default "1rem" }}
+
+{{ $lSrc := .Get "left_src" }}
+{{ $lAlt := .Get "left_alt" }}
+{{ $lCredit := .Get "left_credit" }}
+{{ $lAlign  := .Get "left_credit_align"  | default "left" }}
+{{ $lBg     := .Get "left_credit_bg"     | default "rgba(0,0,0,0.55)" }}
+{{ $lColor  := .Get "left_credit_color"  | default "#fff" }}
+{{ $lCap    := .Get "left_caption" }}
+
+{{ $rSrc := .Get "right_src" }}
+{{ $rAlt := .Get "right_alt" }}
+{{ $rCredit := .Get "right_credit" }}
+{{ $rAlign  := .Get "right_credit_align" | default "right" }}
+{{ $rBg     := .Get "right_credit_bg"    | default "rgba(0,0,0,0.55)" }}
+{{ $rColor  := .Get "right_credit_color" | default "#fff" }}
+{{ $rCap    := .Get "right_caption" }}
+
+{{ if eq $mode "slider" }}
+  {{/* ---------- SLIDER MODE ---------- */}}
+  {{ $pos := .Get "slider_pos" | default "50" }}      {{/* % */}}
+  {{ $labL := .Get "slider_label_left"  | default "" }}
+  {{ $labR := .Get "slider_label_right" | default "" }}
+  {{ $id := printf "sc-slider-%d" now.UnixNano }}
+  {{ $sHeight := .Get "slider_height" }}
+  {{ $sAspect := .Get "slider_aspect" }}
+
+  <div id="{{ $id }}" class="sc-slider" data-sc-slider="true" data-sc-id="{{ $id }}"
+       style="--pos:{{ $pos }}%;{{ with $gap }}--cmp-gap: {{ . }};{{ end }}{{ with $sHeight }}--slider-height: {{ . }};{{ end }}{{ with $sAspect }}--slider-aspect: {{ . }};{{ end }}">
+    <div class="sc-slider-stage">
+      <!-- AFTER (base) -->
+      <figure class="sc-figure sc-after"
+              style="--credit-bg:{{ $rBg | safeCSS }};--credit-color:{{ $rColor | safeCSS }};--credit-align:{{ $rAlign }};">
+        <img class="sc-image no-zoom" data-no-zoom="true" data-zoomable="false" src="{{ $rSrc }}" alt="{{ $rAlt }}" loading="lazy"/>
+        {{ with $rCredit }}<figcaption class="sc-credit">{{ . }}</figcaption>{{ end }}
+        {{ with $labR }}<div class="sc-chip sc-chip-right">{{ . }}</div>{{ end }}
+      </figure>
+
+      <!-- BEFORE (on top, clipped by --pos) -->
+      <figure class="sc-figure sc-before"
+              style="--credit-bg:{{ $lBg | safeCSS }};--credit-color:{{ $lColor | safeCSS }};--credit-align:{{ $lAlign }};">
+        <img class="sc-image no-zoom" data-no-zoom="true" data-zoomable="false" src="{{ $lSrc }}" alt="{{ $lAlt }}" loading="lazy"/>
+        {{ with $lCredit }}<figcaption class="sc-credit">{{ . }}</figcaption>{{ end }}
+        {{ with $labL }}<div class="sc-chip sc-chip-left">{{ . }}</div>{{ end }}
+      </figure>
+
+      <!-- Handle -->
+      <div class="sc-handle" role="presentation" aria-hidden="true">
+        <div class="sc-handle-line"></div>
+        <div class="sc-handle-knob" aria-label="Drag to reveal"></div>
+      </div>
+
+      <!-- Range control for accessibility/keyboard -->
+      <input class="sc-range" type="range" min="0" max="100" value="{{ $pos }}" aria-label="Before/after position">
+    </div>
+
+    <!-- Two captions below (markdown allowed) -->
+    <div class="sc-slider-captions">
+      {{ with $lCap }}<div class="sc-subcap">{{ . | markdownify }}</div>{{ end }}
+      {{ with $rCap }}<div class="sc-subcap">{{ . | markdownify }}</div>{{ end }}
+    </div>
+
+    <script type="application/json" id="{{ $id }}-cfg">{"pos": {{ $pos }}}</script>
+  </div>
+
+  {{ with resources.Get "js/compare-slider.js" }}
+    {{ $built := . | js.Build }}
+    <script defer src="{{ $built.RelPermalink }}"></script>
+  {{ else }}
+    <script defer src="/js/compare-slider.js"></script>
+  {{ end }}
+
+{{ else }}
+  {{/* ---------- SIDE-BY-SIDE MODE ---------- */}}
+  <div class="sc-compare" style="--leftW:{{ $leftW }}%;--rightW:{{ $rightW }}%;--cmp-gap:{{ $gap }};">
+    <div class="sc-photo"
+         style="--credit-bg:{{ $lBg | safeCSS }};--credit-color:{{ $lColor | safeCSS }};--credit-align:{{ $lAlign }};">
+      <figure class="sc-figure">
+        <img class="sc-image no-zoom" data-no-zoom="true" data-zoomable="false" src="{{ $lSrc }}" alt="{{ $lAlt }}" loading="lazy" />
+        {{ with $lCredit }}<figcaption class="sc-credit">{{ . }}</figcaption>{{ end }}
+      </figure>
+      {{ with $lCap }}<div class="sc-subcap">{{ . | markdownify }}</div>{{ end }}
+    </div>
+
+    <div class="sc-photo"
+         style="--credit-bg:{{ $rBg | safeCSS }};--credit-color:{{ $rColor | safeCSS }};--credit-align:{{ $rAlign }};">
+      <figure class="sc-figure">
+        <img class="sc-image no-zoom" data-no-zoom="true" data-zoomable="false" src="{{ $rSrc }}" alt="{{ $rAlt }}" loading="lazy" />
+        {{ with $rCredit }}<figcaption class="sc-credit">{{ . }}</figcaption>{{ end }}
+      </figure>
+      {{ with $rCap }}<div class="sc-subcap">{{ . | markdownify }}</div>{{ end }}
+    </div>
+  </div>
+{{ end }}

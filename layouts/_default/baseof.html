@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ if .Title }}{{ .Title }} | {{ end }}{{ .Site.Title }}</title>
     {{- $dx := slice
+      (resources.Get "css/dx-nav.css")
       (resources.Get "css/dx-tokens.css")
       (resources.Get "css/dx-photo.css")
       (resources.Get "css/dx-code.css")
@@ -118,6 +119,15 @@
     </header>
 
     <main><div class="dx-wrap">
+        <nav class="dx-nav">
+            <div class="dx-nav__inner">
+                {{ range site.Menus.main }}
+                <a class="dx-nav__link{{ if $.IsMenuCurrent "main" . }} is-active{{ end }}" href="{{ .URL }}">
+                {{ .Name }}
+                </a>
+                {{ end }}
+            </div>
+        </nav>
       {{ block "main" . }}{{ end }}
     </div></main>
     {{ partial "dx/scripts.html" . }}

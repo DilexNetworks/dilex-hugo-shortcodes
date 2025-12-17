@@ -1,8 +1,6 @@
 ---
 title: "Design notes"
 summary: some of the design decisions that were made while building this module
-build:
-  list: never
 ---
 
 ## Design notes

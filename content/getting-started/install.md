@@ -1,8 +1,6 @@
 ---
 title: "Install"
 summary: how to use this module
-build:
-  list: never
 ---
 
 ## Install
