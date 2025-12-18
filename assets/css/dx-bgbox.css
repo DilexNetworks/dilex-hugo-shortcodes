@@ -24,7 +24,8 @@
 
 /* Light mode explicit overrides (when the site sets data-theme="light")
    These ensure any globally-defined dark tone overrides do not bleed into light mode. */
-:root[data-theme="light"]{
+:is(:root, html):not(.dark)[data-theme="light"],
+html:not(.dark){
     --dx-bgbox-bg-neutral: var(--dx-bgbox-bg-neutral-default);
     --dx-bgbox-border-neutral: var(--dx-bgbox-border-neutral-default);
 
@@ -42,7 +43,8 @@
 }
 
 /* Dark mode defaults */
-:is(:root, html, body)[data-theme="dark"]{
+:is(:root, html, body)[data-theme="dark"],
+html.dark{
   --dx-bgbox-bg-default: #0f172a;
   --dx-bgbox-border-default: #1f2a3a;
 
@@ -90,7 +92,7 @@
     border-color: var(--dx-bgbox-border, var(--dx-bgbox-border-default, var(--border, #d0d7de)));
     background: none;
     background-color: var(--dx-bgbox-bg, var(--dx-bgbox-bg-default, var(--bg, #ffffff)));
-    color: var(--dx-fg, var(--fg, inherit));
+    color: inherit;
     border-radius: var(--dx-radius, .75rem);
     padding: 1rem;
     margin: 1rem 0;
