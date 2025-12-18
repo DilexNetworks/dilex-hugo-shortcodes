@@ -1,5 +1,6 @@
 ---
 title: "dx/photo - Photo Display with Captions and EXIF Data"
+summary: The photo shortcode was built to display images with captions and EXIF data.  Wrapping this in a *bbox* shortcode is a nice way to make a callout box around the image.
 ---
 
 The photo shortcode was built to display images with captions and EXIF data.  Wrapping this in a *bbox*

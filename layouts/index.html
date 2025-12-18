@@ -45,10 +45,12 @@
   <h2>Shortcodes</h2>
   {{- $pages := where .Site.RegularPages "Section" "shortcodes" -}}
 
-  <div class="dx-grid">
+  <div class="dx-grid" style="grid-template-columns: 1fr;">
     {{- range $pages -}}
       <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
         <div class="dx-card__title">{{ .Title }}</div>
+        {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
+        <p class="dx-sub">{{ $blurb | replaceRE "\\s+" " " | truncate 240 }}</p>
       </a>
     {{- end -}}
   </div>
