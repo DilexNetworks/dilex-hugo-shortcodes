@@ -49,17 +49,11 @@
         });
       })();
     </script>
-    {{- $dx := slice
-      (resources.Get "css/dx-bgbox.css")
-      (resources.Get "css/dx-code.css")
-      (resources.Get "css/dx-compare.css")
-      (resources.Get "css/dx-photo.css")
-      (resources.Get "css/dx-pullquote.css")
-      (resources.Get "css/dx-nav.css")
-      (resources.Get "css/dx-tokens.css")
-      -}}
-    {{- $dxcss := $dx | resources.Concat "css/dx.css" | minify | fingerprint -}}
-    <link rel="stylesheet" href="{{ $dxcss.RelPermalink }}">
+    {{- /* dx SCSS bundle (module assets) */ -}}
+    {{- $dxEntry := "dx/scss/dx.scss" -}}
+    {{- $dxOpts := dict "transpiler" "dartsass" "targetPath" "css/dx-bundle.css" -}}
+    {{- $dx := resources.Get $dxEntry | css.Sass $dxOpts | resources.Minify | resources.Fingerprint -}}
+    <link rel="stylesheet" href="{{ $dx.RelPermalink }}" integrity="{{ $dx.Data.Integrity }}" />
     <style>
       :root{
         --bg:#ffffff; --fg:#0f172a; --muted:#475569; --border:#e2e8f0;

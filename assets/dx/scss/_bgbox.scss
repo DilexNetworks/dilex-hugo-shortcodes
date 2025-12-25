@@ -20,6 +20,7 @@ $dx-bgbox-pad: 1rem;
   border: 1px solid var(--dx-bgbox-border, var(--dx-surface-border, #cbd5e1));
   background-color: var(--dx-bgbox-bg, var(--dx-surface, #f1f5f9));
   color: inherit;
+  text-align: left;
 
   border-radius: $dx-bgbox-radius;
   padding: $dx-bgbox-pad;
