@@ -35,13 +35,15 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Dart Sass
+      - name: Install Dart Sass (standalone binary)
         run: |
-          npm i -g sass
-          echo "$(npm prefix -g)/bin" >> $GITHUB_PATH
-          which sass
-          ls -l "$(which sass)"
-          sass --version
+          set -euo pipefail
+          SASS_VERSION="1.97.1"
+          curl -fsSL -o dart-sass.tar.gz "https://github.com/sass/dart-sass/releases/download/${SASS_VERSION}/dart-sass-${SASS_VERSION}-linux-x64.tar.gz"
+          tar -xzf dart-sass.tar.gz
+          sudo mv "dart-sass" /opt/dart-sass
+          sudo ln -sf /opt/dart-sass/sass /usr/local/bin/sass
+          sudo chmod a+rx /opt/dart-sass/sass
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
