@@ -1,6 +1,7 @@
 # Dilex Hugo Shortcodes (`dilex-hugo-shortcodes`)
 
 [![Release](https://img.shields.io/github/v/release/DilexNetworks/dilex-hugo-shortcodes?display_name=tag&sort=semver)](https://github.com/DilexNetworks/dilex-hugo-shortcodes/releases/latest)
+[![License](https://img.shields.io/github/license/DilexNetworks/dilex-hugo-shortcodes)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://dilexnetworks.github.io/dilex-hugo-shortcodes/)
 
 Reusable, theme‑friendly Hugo shortcodes designed to make documentation and content‑heavy sites easier to build and maintain.
