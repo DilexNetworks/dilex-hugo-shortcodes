@@ -1,6 +1,9 @@
 SHELL := /usr/bin/env bash
 .SHELLFLAGS := -euo pipefail -c
 
+# Reduce noise from nested make invocations
+MAKEFLAGS += --no-print-directory
+
 # Variables
 VERSION_FILE = version.txt      # version file
 BUMPVER_FILE = .bumpversion.cfg # bump2version config file
@@ -84,7 +87,7 @@ VERSION_JSON = $(DATA_DIR)/version.json
 
 # Default target to create a tag and a release
 release: require_release preflight
-	$(MAKE) BUMP_PART=$(RELEASE) bump_version version_json commit_and_push create_tag_release
+	@$(MAKE) BUMP_PART=$(RELEASE) bump_version version_json commit_and_push create_tag_release
 
 # Different release types - release-patch is the default
 release-patch:
@@ -120,15 +123,14 @@ server: clean
 
 # Target to bump version using bump2version
 bump_version:
-	# Ensure the branch is up-to-date and on main
-	git checkout $(BRANCH)
-	git pull origin $(BRANCH)
-	# Bump the version (patch by default)
-	bump2version $(BUMP_PART)
+	@echo "→ Updating $(BRANCH) and bumping version ($(BUMP_PART))"
+	@git checkout $(BRANCH)
+	@git pull origin $(BRANCH)
+	@bump2version $(BUMP_PART)
 
 # Generate/refresh Hugo data file with the latest tag and date
 version_json:
-	VTXT=$$(tr -d ' \t\n\r' < $(VERSION_FILE) 2>/dev/null || true); \
+	@VTXT=$$(tr -d ' \t\n\r' < $(VERSION_FILE) 2>/dev/null || true); \
 	[ -n "$$VTXT" ] || { echo "❌ $(VERSION_FILE) is empty or missing"; exit 2; }; \
 	TAG="$(TAG_PREFIX)$$VTXT"; \
 	DATE=$$(git log -1 --format=%cs HEAD); \
@@ -138,43 +140,38 @@ version_json:
 
 # Target to commit and push version bump changes
 commit_and_push:
-	# Add the version bump changes (e.g., version.txt and .bumpversion) to git
-	git add $(VERSION_FILE) $(BUMPVER_FILE) $(VERSION_JSON)
-	# Commit the changes with a message including the version
-	VERSION_NEW=$$(cat $(VERSION_FILE)); \
+	@echo "→ Committing version bump"
+	@git add $(VERSION_FILE) $(BUMPVER_FILE) $(VERSION_JSON)
+	@VERSION_NEW=$$(cat $(VERSION_FILE)); \
 	git commit -m "Bump version to $$VERSION_NEW"
-	# OLD - git commit -m "Bump version to $(VERSION)"
-	# Push the commit to the main branch
-	git push origin $(BRANCH)
+	@echo "→ Pushing $(BRANCH)"
+	@git push origin $(BRANCH)
 
 # Optional: commit the generated data/version.json back to the repo
 about_commit: version_json
-	git add $(VERSION_JSON)
-	git commit -m "chore: update version.json for $(FULL_TAG)" || true
-	git push origin $(BRANCH) || true
+	@git add $(VERSION_JSON)
+	@git commit -m "chore: update version.json for $(FULL_TAG)" || true
+	@git push origin $(BRANCH) || true
 
 # Target to create a Git tag
 create_tag_release:
-	VTXT=$$(tr -d ' \t\n\r' < $(VERSION_FILE) 2>/dev/null || true); \
+	@VTXT=$$(tr -d ' \t\n\r' < $(VERSION_FILE) 2>/dev/null || true); \
 	[ -n "$$VTXT" ] || { echo "❌ $(VERSION_FILE) is empty or missing"; exit 2; }; \
 	ROOT_TAG="$(TAG_PREFIX)$$VTXT"; \
 	MODULE_TAG="module/$(TAG_PREFIX)$$VTXT"; \
+	echo "→ Tagging $$ROOT_TAG and $$MODULE_TAG"; \
 	\
 	git tag "$$ROOT_TAG"; \
 	git tag "$$MODULE_TAG"; \
 	git push origin "$$ROOT_TAG"; \
 	git push origin "$$MODULE_TAG"; \
 	\
+	echo "→ Creating GitHub release $$ROOT_TAG"; \
 	gh release create "$$ROOT_TAG" \
 		--title "Release $$ROOT_TAG" \
 		--generate-notes
 
 
-
-# Utility to specify bump type (patch, minor, major)
-#bump:
-	# Call make with the bump part (patch, minor, major)
-#	make BUMP_PART=$(BUMP_PART) all
 
 # Clean out Hugo build artifacts
 clean:
@@ -198,4 +195,4 @@ help:
 	@echo "  make release RELEASE=major"
 	@echo ""
 
-.PHONY: check init server bump_version commit_and_push create_tag_release bump clean rebuild version_json about_commit help require_release preflight check_branch check_clean check_up_to_date check_tags check_gh check_version
+.PHONY: check init server bump_version commit_and_push create_tag_release clean rebuild version_json about_commit help require_release preflight check_branch check_clean check_up_to_date check_tags check_gh check_version
