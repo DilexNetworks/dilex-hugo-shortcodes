@@ -1,0 +1,10 @@
+{{/* dx JS bundle
+  JS files are safe to bundle together because they are independent modules
+  (event listeners, small helpers) and do not rely on CSS ordering semantics.
+*/}}
+
+{{ $dxjs := resources.Match "js/dx-*.js" }}
+{{ if gt (len $dxjs) 0 }}
+  {{ $bundle := $dxjs | resources.Concat "js/dx-bundle.js" | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}"></script>
+{{ end }}

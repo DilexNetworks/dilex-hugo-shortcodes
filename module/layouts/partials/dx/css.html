@@ -1,0 +1,17 @@
+{{/* dx CSS (SCSS-only)
+  Expect: assets/dx/scss/dx.scss
+*/}}
+
+{{ $scssEntry := resources.Get "dx/scss/dx.scss" }}
+{{ if $scssEntry }}
+  {{ $sassOpts := dict
+    "targetPath" "css/dx-bundle.css"
+    "transpiler" "dartsass"
+    "outputStyle" (cond hugo.IsDevelopment "expanded" "compressed")
+    "includePaths" (slice "assets/dx/scss")
+  }}
+  {{ $css := $scssEntry | css.Sass $sassOpts | resources.Minify | resources.Fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ else }}
+  {{ warnf "dx: assets/dx/scss/dx.scss not found; skipping dx CSS bundle" }}
+{{ end }}

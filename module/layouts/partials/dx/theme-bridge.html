@@ -1,0 +1,41 @@
+{{/* DX theme bridge: ensure an explicit light/dark signal exists on <html>
+without interfering with theme toggle logic.
+Strategy:
+- If the theme already sets data-theme/scheme/bs-theme, respect it.
+- Otherwise, mirror the presence of the `dark` class into data-theme.
+*/}}
+<script>
+    (function(){
+        var root = document.documentElement;
+        var BRIDGE_ATTR = 'data-dx-theme-bridge';
+
+        function hasExplicitThemeAttr(){
+            return root.hasAttribute('data-theme') || root.hasAttribute('data-scheme') || root.hasAttribute('data-bs-theme');
+        }
+
+        function classSaysDark(){
+            return root.classList.contains('dark') || root.classList.contains('dark-mode') || root.classList.contains('theme-dark');
+        }
+
+        function sync(){
+            // If the theme manages explicit attributes, do not override them.
+            if (hasExplicitThemeAttr() && root.getAttribute(BRIDGE_ATTR) !== '1') return;
+
+            var isDark = classSaysDark();
+            root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            root.setAttribute(BRIDGE_ATTR, '1');
+        }
+
+        // If the theme didn't set explicit attrs, initialize our bridge.
+        if (!hasExplicitThemeAttr()) sync();
+
+        try {
+            new MutationObserver(function(muts){
+                // React to class changes only; avoid fighting theme attribute changes.
+                for (var i=0;i<muts.length;i++){
+                    if (muts[i].attributeName === 'class') { sync(); break; }
+                }
+            }).observe(root, { attributes: true, attributeFilter: ['class'] });
+        } catch(e) {}
+    })();
+</script>

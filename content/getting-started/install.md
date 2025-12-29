@@ -33,6 +33,51 @@ hugo mod get -u
 hugo mod tidy
 ```
 
+> ⚠️ **SCSS build requirement (Dart Sass)**
+>
+> This module compiles SCSS using **Dart Sass** (via Hugo Pipes).
+> You must have the `sass` binary available on your system and in your `PATH`.
+>
+> **macOS (Homebrew):**
+> ```bash
+> brew install sass/sass/sass
+> ```
+>
+> **Linux:**
+> ```bash
+> brew install sass/sass/sass
+> # or
+> sudo snap install dart-sass
+> ```
+>
+> **Windows:**
+> ```powershell
+> choco install sass
+> # or
+> scoop install sass
+> ```
+>
+> You can verify Hugo sees the transpiler by running:
+> ```bash
+> hugo env
+> ```
+
+4) Add the optional **DX head shim** (recommended for sites that use the dx CSS/JS bundles):
+
+Create this file in your site:
+
+- `layouts/partials/extend-head.html`
+
+With the following contents:
+
+```go-html-template
+{{ if templates.Exists "partials/dx/extend-head.html" }}
+  {{ partial "dx/extend-head.html" . }}
+{{ end }}
+```
+
+> If you already have a theme-provided `extend-head.html`, keep it and add the snippet above to it.
+
 You can now use the shortcodes in your content:
 
 ```md
