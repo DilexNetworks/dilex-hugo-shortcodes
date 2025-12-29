@@ -18,7 +18,7 @@ This repo serves two purposes:
 hugo mod init example.com/your-site
 ```
 
-2) Add the module to your site’s `hugo.toml`:
+2) Add the module to your site’s `hugo.toml`.  NOTE the path here has `/module` appended:
 
 ```toml
 [module]
