@@ -23,7 +23,7 @@ hugo mod init example.com/your-site
 ```toml
 [module]
   [[module.imports]]
-    path = "github.com/DilexNetworks/dilex-hugo-shortcodes"
+    path = "github.com/DilexNetworks/dilex-hugo-shortcodes/module"
 ```
 
 3) Fetch dependencies:
@@ -78,11 +78,41 @@ With the following contents:
 
 > If you already have a theme-provided `extend-head.html`, keep it and add the snippet above to it.
 
+
 You can now use the shortcodes in your content:
 
 ```md
 {{</* dx/photo src="images/test.jpg" caption_pos="below" >}}Caption{{< /dx/photo */>}}
 ```
+
+### Updating the module
+
+Hugo modules are versioned and cached. When a new release of this module is published, existing sites will **not** automatically pick it up.
+
+To update **this module only** to the latest version:
+
+```bash
+hugo mod get -u github.com/DilexNetworks/dilex-hugo-shortcodes/module
+hugo mod tidy
+```
+
+To update **all** Hugo modules used by your site:
+
+```bash
+hugo mod get -u
+hugo mod tidy
+```
+
+If you prefer strict version pinning, you can lock to a specific release in your `hugo.toml`:
+
+```toml
+[module]
+  [[module.imports]]
+    path = "github.com/DilexNetworks/dilex-hugo-shortcodes/module"
+    version = "v0.2.3"
+```
+
+In that case, updating means changing the version string explicitly.
 
 ### Option B: Git submodule
 
